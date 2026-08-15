@@ -1,0 +1,9 @@
+button {
+    margin: 5px;
+    cursor: pointer;
+}
+
+form,
+input {
+    margin: 10px;
+}
