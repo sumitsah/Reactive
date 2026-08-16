@@ -1,6 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Inject, Injectable } from '@angular/core';
-import { BehaviorSubject, combineLatest, combineLatestWith, EMPTY, forkJoin, from, mergeMap, Observable, of, shareReplay, startWith, Subject, Subscription, switchMap, tap } from 'rxjs';
+import { BehaviorSubject, combineLatest, combineLatestWith, EMPTY, forkJoin, from, interval, mergeMap, Observable, of, shareReplay, startWith, Subject, Subscription, switchMap, tap, withLatestFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -15,6 +15,8 @@ export class UserService {
 
   trigger$ = new BehaviorSubject('T1');
   data$ = new BehaviorSubject('D1');
+
+  source$ = interval(5000);
 
   // following are the use cases for shareReplay
   //  HeaderComponent
@@ -48,10 +50,15 @@ export class UserService {
   // typeahead
 
   forkJoinNormal() {
-    return forkJoin([
-      of(1),
-      of(2)
-    ])
+    // return forkJoin([
+    //   of(1),
+    //   of(2)
+    // ])
+
+    // return forkJoin([
+    //   of(1, 2, 3),
+    //   of('A', 'B')
+    // ])
     // return forkJoin([
     //   this.http.get('https://jsonplaceholder.typicode.com/users'),
     //   this.http.get('https://jsonplaceholder.typicode.com/users/1')
@@ -73,10 +80,10 @@ export class UserService {
     //   of(3, 4)
     // ])
 
-    // return forkJoin([
-    //   of([1, 2], [5, 6]),
-    //   of([3, 4], [7, 8])
-    // ])
+    return forkJoin([
+      of([1, 2], [5, 6]),
+      of([3, 4], [7, 8])
+    ])
   }
 
   forkJoinEmpty() {
@@ -153,6 +160,12 @@ export class UserService {
       .pipe(
         combineLatestWith(of('A', 'B'))
       )
+  }
+
+  withLatestFromExample() {
+    return this.source$.pipe(
+      withLatestFrom(interval(2000), of(30, 40, 50))
+    )
   }
 
   mergeMapforUser() {
