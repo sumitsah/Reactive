@@ -28,6 +28,10 @@ export class AppComponent implements OnInit {
   confirm$ = this.userForm.controls['cnfPassword'].valueChanges;
 
   ngOnInit() {
+    const bSubject = new BehaviorSubject('Initial State'); // Holds 'Initial State'
+    // Subscriber A joins
+    bSubject.subscribe(val => console.log('A:', val)); // Instantly logs: "Initial State"
+    bSubject.next('Updated State');
     // this.userService.getUsers().subscribe(res => console.log(res));
     // this.userService.forkJoinEmpty().subscribe(res => console.log(res))
     // this.userService.forkJoinNormal().subscribe(([a, b]) => console.log(a, b))

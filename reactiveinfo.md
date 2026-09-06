@@ -224,7 +224,8 @@ By default, standard observables are "cold"—meaning they recreate their execut
 * **Ideal Use Case:** Caching configuration settings, application state profiles, or routing parameters shared between separate layout blocks (like a Header and a Sidebar widget) to prevent redundant database fetches.
 
 ------------------------------
-## 4. Understanding RxJS Subjects## What is a Subject?
+## 4. Understanding RxJS Subjects
+### What is a Subject?
 A `Subject` is a special type of multi-subscriber coordinate in RxJS that acts as both an Observable and an Observer simultaneously.
 
    1. **As an Observable:** It exposes a standard stream pipeline that multiple consumer observers can call .subscribe() on to listen for data.
