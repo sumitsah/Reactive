@@ -24,10 +24,13 @@ export class UserService {
   // ProfileComponent
   // SettingsComponent
   // DashboardComponent 
+  /* 
+  refCount: false controls when the shared source is unsubscribed. It does not control how many downstream subscriptions are created. In your example, two calls to getUser() create two active downstream subscriptions, which is why each refresh response is logged twice.
+  */
   user$: Observable<Object> = this.refresh$.pipe(
     startWith(null),
     switchMap(() => this.http.get('https://jsonplaceholder.typicode.com/users/1')),
-    shareReplay({ bufferSize: 1, refCount: true })
+    shareReplay({ bufferSize: 1, refCount: false })
   )
 
   // getUsers() {
@@ -50,11 +53,15 @@ export class UserService {
   // typeahead
 
   forkJoinNormal() {
-    // return forkJoin([
-    //   of(1),
-    //   of(2)
-    // ])
+    return forkJoin([
+      of(1),
+      of(2)
+    ])
 
+    // return forkJoin({
+    //   a: of(1, 2, 3),
+    //   b: of('A', 'B')
+    // })
     // return forkJoin([
     //   of(1, 2, 3),
     //   of('A', 'B')
@@ -71,6 +78,10 @@ export class UserService {
     // )
 
     // return forkJoin([
+    //   from([1, 2]),
+    //   from([3, 4])
+    // ])
+    // return forkJoin([
     //   of([1, 2]),
     //   of([3, 4])
     // ])
@@ -80,10 +91,15 @@ export class UserService {
     //   of(3, 4)
     // ])
 
-    return forkJoin([
-      of([1, 2], [5, 6]),
-      of([3, 4], [7, 8])
-    ])
+    // return forkJoin([
+    //   from([1, 2]),
+    //   of(3, 4, [1])
+    // ])
+
+    // return forkJoin([
+    //   of([1, 2], [5, 6]),
+    //   of([3, 4], [7, 8])
+    // ])
   }
 
   forkJoinEmpty() {
@@ -149,6 +165,15 @@ export class UserService {
   }
 
   combineLatestWithBehaviourSwitchmap() {
+    /* 
+    The key point is: switchMap cancels the previous inner observable only when the outer observable emits a new value. It does not cancel emissions from the current inner observable just because that inner observable emits multiple values.
+
+    - switchMap cancels the previous inner subscription when the outer observable emits again.
+- combineLatest emits whenever any input emits, once all inputs have emitted at least once.
+- of('X', 'Y') emits both values synchronously; it does not represent two competing inner observables.
+The important distinction is that switchMap switches between inner observables, not between individual values emitted by a single inner observable.
+
+    */
     return this.trigger$
       .pipe(
         switchMap(() => combineLatest([this.data$, of('X', 'Y')]))
@@ -158,7 +183,8 @@ export class UserService {
   combineLatestWithExample() {
     return of(1, 2, 3)
       .pipe(
-        combineLatestWith(of('A', 'B'))
+        combineLatestWith(of('A', 'B')),
+        // combineLatestWith(of('A', 'B'), of('X', 'Y'))
       )
   }
 

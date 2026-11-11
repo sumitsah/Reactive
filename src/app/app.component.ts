@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { UserService } from './Service/user.service';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { BehaviorSubject, combineLatest } from 'rxjs';
+import { BehaviorSubject, combineLatest, Subject, take } from 'rxjs';
 
 @Component({
   selector: 'app-root',
@@ -28,10 +28,12 @@ export class AppComponent implements OnInit {
   confirm$ = this.userForm.controls['cnfPassword'].valueChanges;
 
   ngOnInit() {
-    const bSubject = new BehaviorSubject('Initial State'); // Holds 'Initial State'
+    // const bSubject = new BehaviorSubject('Initial State'); // Holds 'Initial State'
+    const bSubject = new Subject();
     // Subscriber A joins
     bSubject.subscribe(val => console.log('A:', val)); // Instantly logs: "Initial State"
     bSubject.next('Updated State');
+    bSubject.next('More Updated State');
     // this.userService.getUsers().subscribe(res => console.log(res));
     // this.userService.forkJoinEmpty().subscribe(res => console.log(res))
     // this.userService.forkJoinNormal().subscribe(([a, b]) => console.log(a, b))
@@ -45,7 +47,7 @@ export class AppComponent implements OnInit {
     // this.userService.combineLatestWithExample().subscribe((res) => console.log(res))
 
 
-    this.userService.mergeMapforUser().subscribe(res => console.log(res))
+    // this.userService.mergeMapforUser().subscribe(res => console.log(res))
 
     // 1. Form validation depending on multiple fields Use case of combineLatest
     // 2. Combine route params + API data (Angular pattern)
@@ -62,11 +64,14 @@ export class AppComponent implements OnInit {
   }
 
   getUser() {
-    this.userService.user$.subscribe(res => console.log(res))
+    // debugger;
+    this.userService.user$.pipe(take(1)).subscribe(res => console.log(res))
+    // this.userService.user$.subscribe(res => console.log(res))
   }
 
   refreshUser() {
     // this should be used in serice file
+    // debugger;
     this.userService.refresh$.next();
   }
 

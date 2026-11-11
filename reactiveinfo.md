@@ -215,7 +215,7 @@ By default, standard observables are "cold"—meaning they recreate their execut
 
 * **Core Purpose:** Shares a single underlying source subscription among multiple active consumers.
 
-* **Mechanics:** It turns a cold observable into a hot one. When the first subscriber arrives, share subscribes to the underlying source stream. Any subsequent observers that subscribe while the source is active share that exact same single execution. If the subscriber count drops to zero, share automatically unsubscribes from the source. If a new subscriber arrives after the count hit zero, it restarts the source fresh. It does not cache or replay past values to late subscribers.
+* **Mechanics:** It turns a cold observable into a hot one. When the first subscriber arrives, `share` subscribes to the underlying source stream. Any subsequent observers that subscribe while the source is active share that exact same single execution. If the subscriber count drops to zero, share automatically unsubscribes from the source. If a new subscriber arrives after the count hit zero, it restarts the source fresh. It does not cache or replay past values to late subscribers.
 
 ## shareReplay
 
